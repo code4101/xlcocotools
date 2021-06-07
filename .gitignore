@@ -1,0 +1,13 @@
+# PyCharm config dir
+.idea/
+
+# compile files
+build/
+dist/
+*.egg-info/
+
+# ingore file types
+*.pyc
+*.pyd
+*.so
+*.pkl
