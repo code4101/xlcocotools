@@ -38,7 +38,7 @@ setup(
     version='0.0.2',  # 当前版本，每次更新上传到pypi都需要修改
     author='code4101',
     author_email='877362867@qq.com',
-    url='https://github.com/XLPRUtils/xlcocotools',
+    url='https://github.com/code4101/xlcocotools',
     keywords='xlcocotools',
     description='pycocotools修改版本',
     long_description=io.open('README.md', encoding='utf-8').read(),
