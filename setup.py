@@ -35,7 +35,7 @@ ext_modules = [
 
 setup(
     name='xlcocotools',  # pip 安装时用的名字
-    version='0.0.2',  # 当前版本，每次更新上传到pypi都需要修改
+    version='0.0.3',  # 当前版本，每次更新上传到pypi都需要修改
     author='code4101',
     author_email='877362867@qq.com',
     url='https://github.com/code4101/xlcocotools',
