@@ -60,14 +60,14 @@ class COCOeval:
     # Data, paper, and tutorials available at:  http://mscoco.org/
     # Code written by Piotr Dollar and Tsung-Yi Lin, 2015.
     # Licensed under the Simplified BSD License [see coco/license.txt]
-    def __init__(self, cocoGt=None, cocoDt=None, iouType='segm', *, printf=False):
+    def __init__(self, cocoGt=None, cocoDt=None, iouType='segm', *, print_mode=False):
         '''
         Initialize CocoEval using coco APIs for gt and dt
         :param cocoGt: coco object with ground truth annotations
         :param cocoDt: coco object with detection results
         :return: None
         '''
-        if not iouType and printf:
+        if not iouType and print_mode:
             print('iouType not specified. use default iouType segm')
         self.cocoGt = cocoGt  # ground truth COCO API
         self.cocoDt = cocoDt  # detections COCO API
@@ -82,7 +82,7 @@ class COCOeval:
         if not cocoGt is None:
             self.params.imgIds = sorted(cocoGt.getImgIds())
             self.params.catIds = sorted(cocoGt.getCatIds())
-        self.printf = printf
+        self.print_mode = print_mode
 
     def _prepare(self):
         '''
@@ -129,15 +129,15 @@ class COCOeval:
         :return: None
         '''
         tic = time.time()
-        if self.printf:
+        if self.print_mode:
             print('Running per image evaluation...')
         p = self.params
         # add backward compatibility if useSegm is specified in params
         if not p.useSegm is None:
             p.iouType = 'segm' if p.useSegm == 1 else 'bbox'
-            if self.printf:
+            if self.print_mode:
                 print('useSegm (deprecated) is not None. Running {} evaluation'.format(p.iouType))
-        if self.printf:
+        if self.print_mode:
             print('Evaluate annotation type *{}*'.format(p.iouType))
         p.imgIds = list(np.unique(p.imgIds))
         if p.useCats:
@@ -166,7 +166,7 @@ class COCOeval:
                          ]
         self._paramsEval = copy.deepcopy(self.params)
         toc = time.time()
-        if self.printf:
+        if self.print_mode:
             print('DONE (t={:0.2f}s).'.format(toc - tic))
 
     def computeIoU(self, imgId, catId):
@@ -333,10 +333,10 @@ class COCOeval:
         :param p: input params for evaluation
         :return: None
         '''
-        if self.printf:
+        if self.print_mode:
             print('Accumulating evaluation results...')
         tic = time.time()
-        if not self.evalImgs and self.printf:
+        if not self.evalImgs and self.print_mode:
             print('Please run evaluate() first')
         # allows input customized parameters
         if p is None:
@@ -434,7 +434,7 @@ class COCOeval:
             'scores': scores,
         }
         toc = time.time()
-        if self.printf:
+        if self.print_mode:
             print('DONE (t={:0.2f}s).'.format(toc - tic))
 
     def step_summarize(self, ap=1, iouThr=None, areaRng='all', maxDets=100):
@@ -469,7 +469,7 @@ class COCOeval:
             mean_s = np.mean(s[s > -1])
         return mean_s
 
-    def summarize(self, *, printf=None):
+    def summarize(self, *, print_mode=None):
         '''
         Compute and display summary metrics for evaluation results.
         Note this functin can *only* be applied on the default parameter setting
@@ -504,7 +504,7 @@ class COCOeval:
                 mean_s = -1
             else:
                 mean_s = np.mean(s[s > -1])
-            if (printf is True) or (printf is None and self.printf):
+            if (print_mode is True) or (print_mode is None and self.print_mode):
                 print(iStr.format(titleStr, typeStr, iouStr, areaRng, maxDets, mean_s))
             return mean_s
 

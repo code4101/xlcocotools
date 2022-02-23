@@ -76,7 +76,7 @@ def _isArrayLike(obj):
 
 
 class COCO:
-    def __init__(self, annotation_file=None, *, printf=False):
+    def __init__(self, annotation_file=None, *, print_mode=False):
         """
         Constructor of Microsoft COCO helper class for reading and visualizing annotations.
         :param annotation_file (str): location of annotation file
@@ -92,11 +92,11 @@ class COCO:
             # dataset = json.load(open(annotation_file, 'r'))
             dataset = annotation_file if isinstance(annotation_file, dict) else File(annotation_file).read()
             assert type(dataset) == dict, 'annotation file format {} not supported'.format(type(dataset))
-            if printf:
+            if print_mode:
                 print('loading coco format annotations into memory: (t={:0.2f}s)'.format(time.time() - tic))
             self.dataset = dataset
             self.createIndex()
-        self.printf = printf
+        self.print_mode = print_mode
 
     def createIndex(self):
         # create index
@@ -316,7 +316,7 @@ class COCO:
             ax.add_collection(p)
         elif datasetType == 'captions':
             for ann in anns:
-                if self.printf:
+                if self.print_mode:
                     print(ann['caption'])
 
     def loadRes(self, resFile):
@@ -325,10 +325,10 @@ class COCO:
         :param   resFile (str)     : file name of result file
         :return: res (obj)         : result api object
         """
-        res = COCO(printf=self.printf)
+        res = COCO(print_mode=self.print_mode)
         res.dataset['images'] = [img for img in self.dataset['images']]
 
-        if self.printf:
+        if self.print_mode:
             print('Loading and preparing results...')
         tic = time.time()
         if type(resFile) == str or (PYTHON_VERSION == 2 and type(resFile) == unicode):
@@ -375,7 +375,7 @@ class COCO:
                 ann['area'] = (x1 - x0) * (y1 - y0)
                 ann['id'] = id + 1
                 ann['bbox'] = [x0, y0, x1 - x0, y1 - y0]
-        if self.printf:
+        if self.print_mode:
             print('DONE (t={:0.2f}s)'.format(time.time() - tic))
 
         res.dataset['annotations'] = anns
